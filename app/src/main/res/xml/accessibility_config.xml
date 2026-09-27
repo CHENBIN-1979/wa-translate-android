@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- v0.4.2 取证（9/26 myBCA 弹窗回归）：canPerformGestures="true" 是 v0.3.5
+     起唯一新增的无障碍可见面（v0.3.0→0.3.4 无、v0.4.0 删 FGS 无效——release
+     manifest 从来未声明 FGS 权限）。银行风控枚举「声明手势注入能力的无障碍
+     服务」= 自动化/劫持信号。删声明 → 回到 v0.3.4 可见面。代码里
+     dispatchGesture 唯一调用点 WaTranslateService.kt:759 是 tap-copy 的
+     ACTION_CLICK 失败兜底，runCatching 包裹，声明删除后仅静默降级。 -->
+<!-- v0.4.4 结论（勿再尝试）：packageNames 绑定 WhatsApp 已试做并回滚——
+     ① 安全收益≈0：官方定义 packageNames 仅限定「receive events」的投递来源
+        （R.styleable AccessibilityService_packageNames），不约束
+        getRootInActiveWindow()/windows 读取——绑了照样能读任意窗口，
+        「最小权限」在只监听 WhatsApp 的架构下是伪命题；
+     ② 功能实伤（e2e E13 实证 EXIT=1）：离开 WhatsApp→桌面 的
+        WINDOW_STATE_CHANGED 被系统按 packageNames 过滤不再投递，
+        L207-211「别家窗口出现→撤窗」清理通道断链，「译」按钮永久残留。
+     声明层维持 v0.3.4 形态（全收事件+代码 TARGET_PKGS 过滤）。 -->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/a11y_desc"
+    android:accessibilityEventTypes="typeWindowContentChanged|typeWindowStateChanged|typeViewScrolled"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagRetrieveInteractiveWindows|flagIncludeNotImportantViews"
+    android:canRetrieveWindowContent="true"
+    android:notificationTimeout="200" />

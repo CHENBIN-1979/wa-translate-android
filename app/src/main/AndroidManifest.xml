@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />  <!-- v0.1.6 日志头部网络类型 -->
+    <!-- v0.4.3 恢复保活（v0.3.7 F1 原样）：真机取证 myBCA 命中面 = canPerformGestures
+         （v0.4.2 删除后弹窗消失，用户亲测），FGS 嫌疑洗清（P2：搜狗/小红书/抖音带常驻
+         FGS 均不弹；v0.4.0/4.1 删 FGS 仍弹=零影响实证）。本组合「FGS开+手势关」为
+         新数据点，装机后需复测 myBCA 闭环。
+         specialUse 类型=无障碍悬浮翻译守护（侧载分发，不上架，无审核顾虑）。
+         旧平台忽略不认识的权限/类型声明，声明本身零副作用。 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <application
+        android:label="WA翻译"
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@android:style/Theme.Material.Light"
+        android:allowBackup="false"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <service
+            android:name=".WaTranslateService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            android:label="WA翻译"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <!-- v0.4.3 恢复保活：Android 14+ 强制 specialUse 前台服务自报用途（v0.3.7 原样） -->
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="WhatsApp 聊天悬浮翻译守护进程，维持无障碍服务不被系统回收" />
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_config" />
+        </service>
+    </application>
+</manifest>

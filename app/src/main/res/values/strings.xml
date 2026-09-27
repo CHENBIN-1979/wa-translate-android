@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="a11y_desc">在 WhatsApp 聊天里浮出绿色中文译文行（悬浮覆盖，不读取聊天记录，翻译在你配置的 API 端完成）。</string>
+</resources>

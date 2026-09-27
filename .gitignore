@@ -1,0 +1,23 @@
+# ---- 构建产物 ----
+build/
+.cxx/
+.gradle/
+local.properties
+keystore.properties
+*.apk
+*.zip
+
+# ---- 发布归档（每个 release-vX.Y/ 目录含 APK+src zip，本地留存为主，不入库；
+#      版本历史以 git tag 为准）----
+release-v*/
+
+# ---- 签名密钥（硬规则：.jks 绝不入库；重新构建时需自备 keystore/wa-translate-release.jks）----
+keystore/*.jks
+
+# ---- 测试大文件 ----
+android-test/mockfiles/*.bin
+
+# ---- 杂项 ----
+__pycache__/
+*.pyc
+.DS_Store

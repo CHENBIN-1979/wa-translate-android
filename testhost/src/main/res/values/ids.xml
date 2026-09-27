@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 仿 WhatsApp 新版节点 id（viewIdResourceName 输出 <pkg>:id/名字） -->
+    <item name="message_text_view" type="id" />
+    <item name="message_text" type="id" />
+    <item name="date" type="id" />
+    <item name="system_message_text" type="id" />
+    <item name="contact_name" type="id" />
+    <item name="message_edit_text" type="id" />
+    <item name="messages_list" type="id" />
+</resources>

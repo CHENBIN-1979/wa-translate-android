@@ -1,0 +1,76 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+
+android {
+    namespace 'id.co.watranslate'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'id.co.watranslate'
+        minSdk 29
+        targetSdk 35
+        versionCode 16
+        versionName '0.4.4'
+        // Hy-MT 本地引擎（M1d）：arm64 真机 + x86_64 模拟器
+        ndk { abiFilters 'arm64-v8a', 'x86_64' }
+        // v0.3.7 F2：版本号唯一真源=versionName（AGP8 默认关 buildConfig，显式开）
+        buildConfigField 'String', 'APP_VERSION', "\"${versionName}\""
+        externalNativeBuild {
+            // shim 静态链 STL（预编译 libllama 各自静态内联，跨库只传 C 字符串，双份安全）
+            cmake { arguments '-DANDROID_STL=c++_static' }
+        }
+    }
+
+    // 本地引擎：NDK r29 + 预编译 libllama/libggml（pack_engine.sh 铺目录）
+    ndkVersion '29.0.14206865'
+    externalNativeBuild {
+        cmake { path file('src/main/cpp/CMakeLists.txt'); version '3.22.1' }
+    }
+
+    // v0.3.7 F2：BuildConfig 显式启用（AGP8 起默认关闭，不声明则 BuildConfig 类不生成）
+    buildFeatures { buildConfig true }
+
+    packaging {
+        // ggml dlopen 需扫描 nativeLibraryDir 下真实文件 → 强制 legacy 解压打包
+        jniLibs { useLegacyPackaging = true }
+    }
+
+    signingConfigs {
+        release {
+            // 签名凭据读 keystore.properties（不入库）；模板见 keystore.properties.example
+            def ksProps = new Properties()
+            def ksFile = rootProject.file('keystore.properties')
+            if (ksFile.exists()) {
+                ksFile.withInputStream { ksProps.load(it) }
+                storeFile file(ksProps.getProperty('storeFile', '../keystore/wa-translate-release.jks'))
+                storePassword ksProps.getProperty('storePassword')
+                keyAlias ksProps.getProperty('keyAlias')
+                keyPassword ksProps.getProperty('keyPassword')
+            }
+            // 文件缺失时留空：debug 构建不受影响；release 构建会在签名阶段报错，
+            // 提示构建者先 cp keystore.properties.example keystore.properties
+        }
+    }
+
+    buildTypes {
+        debug {
+            // debug 默认可安装签名
+        }
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+    // 零第三方依赖：纯平台 API（org.json 来自 android.jar），debug 签名可直装
+}

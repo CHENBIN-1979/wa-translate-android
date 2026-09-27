@@ -1,0 +1,21 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+
+// 假 WhatsApp 测试壳：节点 id 仿 com.whatsapp:id/*，仅供模拟器验证翻译服务，不含任何 WhatsApp 代码
+android {
+    namespace 'id.co.watranslate.testhost'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'id.co.watranslate.testhost'
+        minSdk 29
+        targetSdk 35
+        versionCode 1
+        versionName '0.1.0'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions { jvmTarget = '17' }
+}
