@@ -7,6 +7,8 @@
 
 完整版本更新记录（v0.1.1 → v0.4.4）与**各版本安装包 / 源码归档**已迁至 [Releases 页面](https://github.com/CHENBIN-1979/wa-translate-android/releases)。
 
+各版本的**根因取证、机制说明与踩坑经验**（"为什么这么改"）详录见 [CHANGELOG.md](CHANGELOG.md)；Releases 页面只保留简短的更新/修复条目。
+
 ## 功能
 - 进入 WhatsApp 聊天 → 点对方外语消息（印尼语）→ 气泡旁浮出深绿中文译文行（智能上下位）
 - 译文行结构：白色圆角底行，`译 v0.2.4` 小水印（10sp）+ 译文（默认 16sp 加粗，深绿 #0E8C46，滑杆可调 12–24sp）
